@@ -45,15 +45,19 @@ for category in variantRawCategories:
     if 'inventory-variation-select' in str((category.get('for'))):
         variantFinalCategories.append(category.text)
 variantFinalCategories = str.join(", ", variantFinalCategories)
-print(variantFinalCategories)
 
 
+# Variant choices (or values)
+variationValuesRaw = soup.find_all("select", {"class": "variation-select"})
+variationValues = []
+currentList = []
+i=0
+for value in variationValuesRaw:
+    valueList = value.text
+    valueList = valueList.split('\n')
+    variationValues.append(valueList)
 
-variationValues = soup.find_all("select", {"class": "variation-select"})
-
-# print(variantCategories)
-# for value in variationValues:
-#     print(value)
+print(variationValues)
 
 
 
@@ -65,9 +69,11 @@ variationValues = soup.find_all("select", {"class": "variation-select"})
 # print(tags)
 # print(materials)
 # print(images)
+# print(variantFinalCategories)
 
 
-# with open('sample.csv','w', newline='') as csvfile:
+
+    # with open('sample.csv','w', newline='') as csvfile:
 #     writer = csv.writer(csvfile)
 #     writer.writerow(["Field 1", "Field 2", "Field 3", "Field 4", "Field 5", "Field 6", "Field 7"])
 #     writer.writerows([["a","b","c"],["a","b","c"],["a","b","c"],["a","b","c"],["a","b","c"],["a","b","c"],
