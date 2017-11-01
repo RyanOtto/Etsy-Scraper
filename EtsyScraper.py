@@ -33,10 +33,10 @@ for image in carouseEntries: images.append(image.get('data-full-image-href'))
 
 # Variant categories
 variantRawCategories = soup.find_all("label")
-variantFinalCategories = []
+variationCategories = []
 for category in variantRawCategories:
     if 'inventory-variation-select' in str((category.get('for'))):
-        variantFinalCategories.append(category.text)
+        variationCategories.append(category.text)
 
 # Variant choices (or values)
 variationValuesRaw = soup.find_all("select", {"class": "variation-select"})
@@ -45,8 +45,10 @@ currentList = []
 for value in variationValuesRaw:
     valueList = value.text
     valueList = valueList.split('\n')
-    new_array = [x for x in valueList if str(x) != 'Select an option']
-    variationValues.append(new_array[1:len(valueList)-2])
+    newValueList = [x for x in valueList if str(x) != 'Select an option']
+    variationValues.append(newValueList[1:len(valueList) - 2])
+for i in range(0, len(variationValues)):
+    variationValues[i] = str.join(",", variationValues[i])
 
 # finalthing=[]
 # i =0
@@ -59,23 +61,39 @@ for value in variationValuesRaw:
 
 
 # print(title)
-print(description)
+# print(description)
 # print(price)
 # print(currencyCode)
 # print(quantity)
 # print(tags)
 # print(materials)
 # print(images)
-# print(variantFinalCategories)
+# print(variationCategories)
 # print(variationValues)
 
-# Fields to be written
-# writeImages = ""
-# writeVariantFinalCategories = ""
-# write variationValues = ""
-
-# For every image, add "image N" to fields
-
-with open('sample.csv','a', newline='') as csvfile:
+# Image fields/values
+with open('sample.csv','w', newline='') as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerows([[ title, description, price, currencyCode, quantity, tags, materials ]])
+    fieldImages = ""
+    fieldVariationCategories = ""
+    fieldVariationValues = ""
+    fields = [["TITLE", "DESCRIPTION", "PRICE", "CURRENCY CODE", "QUANTITY", "TAGS", "MATERIALS"]]
+    values = [[ title, description, price, currencyCode, quantity, tags, materials ]]
+    # Add image fields
+    for i in range(1, len(images)):
+        fields[0].append("IMAGE" + str(i))
+        values[0].append(images[i])
+
+    # Variation fields/values
+    for i in range(1, len(variationCategories)+1):
+        fields[0].append("VARIATION " + str(i) + " TYPE")
+        fields[0].append("VARIATION " + str(i) + " NAME")
+        fields[0].append("VARIATION " + str(i) + " VALUES")
+        values[0].append("Color")
+        values[0].append(variationCategories[i-1])
+        values[0].append(variationValues[i-1])
+
+
+    writer.writerows(fields)
+    writer.writerows(values)
+csvfile.close()
