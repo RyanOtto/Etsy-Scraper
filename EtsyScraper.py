@@ -8,13 +8,14 @@ def productScrape(url):
     global fieldsWritten
     page = urllib.request.urlopen(url)
     soup = BeautifulSoup(page.read(), "html.parser")
+    quantity = 1
 
     # Field values
     title = soup.find("span", {"itemprop":"name"} ).text
     description = soup.find("meta", {"name":"description"} ).get("content")
     price = soup.find(itemprop="price").get("content")
-    currencyCode = soup.find(itemprop="currency").get("content")
-    materials = soup.find("span", {"id":"overview-materials"} ).text
+    #currencyCode = soup.find(itemprop="currency").get("content")
+    #materials = soup.find("span", {"id":"overview-materials"} ).text
 
     # Quantity
     for selector in soup.find_all( "select", {"id":'inventory-select-quantity'} ):
@@ -52,33 +53,12 @@ def productScrape(url):
     for i in range(0, len(variationValues)):
         variationValues[i] = str.join(",", variationValues[i])
 
-    # finalthing=[]
-    # i =0
-    # for x in variationValues:
-    #     x = str.join(',', variationValues[i])
-    #     i+=1
-    #     finalthing.append(x)
-    # print(finalthing)
-
-
-
-    # print(title)
-    # print(description)
-    # print(price)
-    # print(currencyCode)
-    # print(quantity)
-    # print(tags)
-    # print(materials)
-    # print(images)
-    # print(variationCategories)
-    # print(variationValues)
-
     # Image fields/values
     fieldImages = ""
     fieldVariationCategories = ""
     fieldVariationValues = ""
-    fields = [["TITLE", "DESCRIPTION", "PRICE", "CURRENCY CODE", "QUANTITY", "TAGS", "MATERIALS"]]
-    values = [[title, description, price, currencyCode, quantity, tags, materials]]
+    fields = [["TITLE", "DESCRIPTION", "PRICE", "QUANTITY", "TAGS"]]
+    values = [[title, description, price, quantity, tags]]
     # Add image fields
     for i in range(1, len(images) + 1):
         fields[0].append("IMAGE" + str(i))
@@ -86,14 +66,14 @@ def productScrape(url):
 
     # Variation fields/values
     for i in range(1, len(variationCategories) + 1):
-        fields[0].append("VARIATION " + str(i) + " TYPE")
+        #fields[0].append("VARIATION " + str(i) + " TYPE")
         fields[0].append("VARIATION " + str(i) + " NAME")
         fields[0].append("VARIATION " + str(i) + " VALUES")
-        values[0].append("Color")
+        #values[0].append("Color")
         values[0].append(variationCategories[i - 1])
         values[0].append(variationValues[i - 1])
 
-    with open('sample.csv', 'a', newline='') as csvfile:
+    with open('sample.csv', 'a', newline='', encoding="utf8") as csvfile:
         writer = csv.writer(csvfile)
         if fieldsWritten is False:
             writer.writerows(fields)
@@ -102,6 +82,6 @@ def productScrape(url):
 
     csvfile.close()
 
-with open('links','r') as links:
+with open('links','r', encoding="utf8") as links:
     for url in links:
         productScrape(url)
