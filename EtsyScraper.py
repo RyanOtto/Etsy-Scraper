@@ -17,7 +17,6 @@ def productScrape(url):
     price = soup.find(itemprop="price").get("content")
     #currencyCode = soup.find(itemprop="currency").get("content")
     #materials = soup.find("span", {"id":"overview-materials"} ).text
-    print(description)
     # Quantity
     for selector in soup.find_all( "select", {"id":'inventory-select-quantity'} ):
        for child in selector.find_all('option'):
@@ -52,6 +51,7 @@ def productScrape(url):
         newValueList = [x for x in valueList if str(x) != 'Select an option']
         variationValues.append(newValueList[1:len(valueList) - 2])
     for i in range(0, len(variationValues)):
+        for x in range(0, len(variationValues[i])): variationValues[i][x] = variationValues[i][x].replace(",", "")
         variationValues[i] = str.join(",", variationValues[i])
 
     # Image fields/values
