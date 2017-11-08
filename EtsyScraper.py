@@ -12,11 +12,12 @@ def productScrape(url):
 
     # Field values
     title = soup.find("span", {"itemprop":"name"} ).text
-    description = soup.find("meta", {"name":"description"} ).get("content")
+    desc = soup.find("div", {"class":"max-height-text-container ui-toolkit"})
+    description = desc.find("div")
     price = soup.find(itemprop="price").get("content")
     #currencyCode = soup.find(itemprop="currency").get("content")
     #materials = soup.find("span", {"id":"overview-materials"} ).text
-
+    print(description)
     # Quantity
     for selector in soup.find_all( "select", {"id":'inventory-select-quantity'} ):
        for child in selector.find_all('option'):
