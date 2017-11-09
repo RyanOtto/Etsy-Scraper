@@ -2,8 +2,6 @@ from bs4 import BeautifulSoup
 import urllib.request
 import csv
 
-fieldsWritten = False
-
 def productScrape(url):
     global fieldsWritten
     page = urllib.request.urlopen(url)
@@ -55,9 +53,6 @@ def productScrape(url):
         variationValues[i] = str.join(",", variationValues[i])
 
     # Image fields/values
-    fieldImages = ""
-    fieldVariationCategories = ""
-    fieldVariationValues = ""
     fields = [["TITLE", "DESCRIPTION", "PRICE", "QUANTITY", "TAGS"]]
     values = [[title, description, price, quantity, tags]]
     # Add image fields
@@ -74,15 +69,13 @@ def productScrape(url):
         values[0].append(variationCategories[i - 1])
         values[0].append(variationValues[i - 1])
 
-    with open('sample.csv', 'a', newline='', encoding="utf8") as csvfile:
+    csvName = title
+    with open(csvName + '.csv', 'w', newline='', encoding="utf8") as csvfile:
         writer = csv.writer(csvfile)
-        if fieldsWritten is False:
-            writer.writerows(fields)
-            fieldsWritten = True
+        writer.writerows(fields)
         writer.writerows(values)
-
     csvfile.close()
 
-with open('links','r', encoding="utf8") as links:
+with open('links.txt','r', encoding="utf8") as links:
     for url in links:
         productScrape(url)
