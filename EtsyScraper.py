@@ -69,7 +69,7 @@ def productScrape(url):
         values[0].append(variationCategories[i - 1])
         values[0].append(variationValues[i - 1])
 
-    csvName = title
+    csvName = title.replace(' ','').replace('-','').replace('/','')
     with open(csvName + '.csv', 'w', newline='', encoding="utf8") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows(fields)
