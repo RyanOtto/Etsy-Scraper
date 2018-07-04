@@ -2,8 +2,10 @@ from bs4 import BeautifulSoup
 import urllib.request
 import csv
 
+fileNumber = 0
 def productScrape(url):
     global fieldsWritten
+    global fileNumber
     page = urllib.request.urlopen(url)
     soup = BeautifulSoup(page.read(), "html.parser")
     quantity = 1
@@ -69,7 +71,7 @@ def productScrape(url):
         values[0].append(variationCategories[i - 1])
         values[0].append(variationValues[i - 1])
 
-    csvName = title.replace(' ','').replace('-','').replace('/','')
+    csvName = 'file' + str(fileNumber)
     with open(csvName + '.csv', 'w', newline='', encoding="utf8") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows(fields)
@@ -79,3 +81,4 @@ def productScrape(url):
 with open('links.txt','r', encoding="utf8") as links:
     for url in links:
         productScrape(url)
+        fileNumber = fileNumber + 1
